@@ -8,13 +8,13 @@ import { doctor, getReport, compact, commandsFileSchema } from './api.js';
 import { terminalApprover } from './approval.js';
 import { startMcp } from './mcp.js';
 import { VERSION, DefenceError } from './model.js';
-import { maskText } from './util.js';
+import { maskText, sanitizeData } from './util.js';
 
 export async function main(argv = process.argv) {
   const program = new Command().name('defencerea').description('JS / Electron 静态逆向体检与用户确认后加固').version(VERSION)
     .option('--store <directory>', '报告和记录目录（必须与输入、输出分离）').option('--json', '输出结构化 JSON');
   const store = () => new Store(program.opts().store);
-  const output = (data: unknown) => { process.stdout.write(`${maskText(JSON.stringify(data, null, 2))}\n`); };
+  const output = (data: unknown) => { process.stdout.write(`${JSON.stringify(sanitizeData(data), null, 2)}\n`); };
   const collect = (value: string, values: string[]) => [...values, value];
   program.command('doctor').description('检查运行环境与依赖').action(async () => { output(await doctor()); });
   program.command('scan <target>').description('只读静态体检并生成详细报告').option('--no-rea', '显式跳过 REA，跨层分析标记为未知').action(async (target: string, options: { rea: boolean }) => { output(compact(await scanTarget(store(), target, options))); });

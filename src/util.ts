@@ -49,7 +49,14 @@ export async function ensureOutside(target: { inputPath: string; requestedPath: 
 export function now(): string { return new Date().toISOString(); }
 export function errorMessage(error: unknown): string { return error instanceof Error ? error.message : String(error); }
 export function maskText(text: string): string {
-  return text.replace(/-----BEGIN [^-\r\n]*PRIVATE KEY-----[\s\S]*?(?:-----END [^-\r\n]*PRIVATE KEY-----|$)/g, '[PRIVATE KEY REDACTED]')
+  return text.replace(/[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/g, '')
+    .replace(/-----BEGIN [^-\r\n]*PRIVATE KEY-----[\s\S]*?(?:-----END [^-\r\n]*PRIVATE KEY-----|$)/g, '[PRIVATE KEY REDACTED]')
     .replace(/\b(?:sk-[A-Za-z0-9_-]{16,}|gh[pousr]_[A-Za-z0-9]{20,}|AKIA[A-Z0-9]{16})\b/g, '[CREDENTIAL REDACTED]')
     .replace(/((?:password|passwd|secret|token|api[_-]?key)\s*[=:]\s*["']?)[^\s"'`,;]{8,}/gi, '$1[REDACTED]');
+}
+export function sanitizeData<T>(value: T): T {
+  if (typeof value === 'string') return maskText(value) as T;
+  if (Array.isArray(value)) return value.map(sanitizeData) as T;
+  if (value !== null && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, sanitizeData(item)])) as T;
+  return value;
 }

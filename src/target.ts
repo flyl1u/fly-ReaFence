@@ -35,8 +35,9 @@ async function checkAsar(file: string) {
 
 export async function inventory(request: string): Promise<Target> {
   const requestedPath = path.resolve(request);
-  await noSymlinks(requestedPath);
+  if ((await lstat(requestedPath)).isSymbolicLink()) fail('SYMLINK', '请直接指定真实输入，不使用根符号链接。');
   let inputPath = await realpath(requestedPath);
+  await noSymlinks(inputPath);
   let stat = await lstat(inputPath);
   const limitations: string[] = [];
   if (stat.isDirectory()) {
@@ -49,7 +50,7 @@ export async function inventory(request: string): Promise<Target> {
       limitations.push('已选择目录内的 app.asar 载荷；外部可执行文件、签名和运行时不在加固范围内。');
     }
   }
-  const format = stat.isDirectory() ? 'directory' : stat.isFile() && inputPath.endsWith('.asar') ? 'asar' : fail('UNSUPPORTED_TARGET', '请提供构建目录或 .asar 文件。');
+  const format = stat.isDirectory() ? 'directory' : stat.isFile() && /\.asar$/i.test(inputPath) ? 'asar' : fail('UNSUPPORTED_TARGET', '请提供构建目录或 .asar 文件。');
   const files: Target['files'] = [];
   const casePaths = new Set<string>();
   let total = 0;
@@ -78,6 +79,7 @@ export async function inventory(request: string): Promise<Target> {
         } else if (info.isFile()) {
           if (info.size + total > MAX_TOTAL_BYTES) fail('RESOURCE_LIMIT', '输入超过 512 MiB。');
           add({ path: relative, size: info.size, sha256: await hashFile(full), kind: 'file', executable: Boolean(info.mode & 0o111), unpacked: false });
+          if (/\.asar$/i.test(relative)) limitations.push(`嵌套 ASAR 未由本地规则展开：${relative}；请直接指定该 ASAR 单独体检。`);
         } else fail('SPECIAL_FILE', `不读取特殊文件：${relative}`);
       }
     };
@@ -101,6 +103,24 @@ export async function inventory(request: string): Promise<Target> {
         if (info.integrity && (info.integrity.algorithm !== 'SHA256' || info.integrity.hash !== digest)) fail('ASAR_INTEGRITY', `ASAR 条目摘要不匹配：${relative}`);
         add({ path: relative, size: info.size, sha256: digest, kind: 'file', executable: Boolean(info.executable), unpacked: Boolean(info.unpacked) });
       }
+    }
+    const sidecar = `${inputPath}.unpacked`;
+    if (await exists(sidecar)) {
+      await noSymlinks(sidecar);
+      const unpacked = new Set(files.filter(f => f.unpacked).map(f => f.path));
+      const inspectSidecar = async (directory: string, prefix = ''): Promise<void> => {
+        for (const item of await readdir(directory, { withFileTypes: true })) {
+          const relative = safeRelative(prefix ? `${prefix}/${item.name}` : item.name);
+          const full = path.join(directory, item.name);
+          const info = await lstat(full);
+          if (info.isSymbolicLink()) fail('SYMLINK', `unpacked 目录包含符号链接：${relative}`);
+          if (info.isDirectory()) {
+            if (![...unpacked].some(p => p === relative || p.startsWith(`${relative}/`))) fail('UNMODELED_SIDECAR', `unpacked 目录存在未被 ASAR 头记录的目录：${relative}；请单独检查该目录。`);
+            await inspectSidecar(full, relative);
+          } else if (!info.isFile() || !unpacked.has(relative)) fail('UNMODELED_SIDECAR', `unpacked 目录存在未被 ASAR 头记录的文件：${relative}；请单独检查该目录。`);
+        }
+      };
+      await inspectSidecar(sidecar);
     }
   }
   files.sort((a, b) => a.path < b.path ? -1 : a.path > b.path ? 1 : 0);

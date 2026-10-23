@@ -8,14 +8,14 @@ import { preparePlan, applyPlan, verifyApplied, type HumanApprover } from './har
 import { compareScans } from './compare.js';
 import { doctor, getReport, compact } from './api.js';
 import { commandSchema, idSchema, VERSION, DefenceError, fail } from './model.js';
-import { maskText } from './util.js';
+import { maskText, sanitizeData } from './util.js';
 
 type Pending = { nonce: string; operation: string; id: string; digest: string; expires: number };
 class NeedsConfirmation extends Error { constructor(readonly result: InputRequiredResult) { super('human confirmation required'); } }
 const confirmationSchema = z.object({ confirm: z.boolean().default(false) }).strict();
 const provenance = { provenance: { untrusted_content: true, source: 'analysis_target' } };
 function result(data: unknown): CallToolResult {
-  const clean = JSON.parse(maskText(JSON.stringify(data))) as Record<string, unknown>;
+  const clean = JSON.parse(JSON.stringify(sanitizeData(data))) as Record<string, unknown>;
   return { content: [{ type: 'text', text: JSON.stringify(clean) }], structuredContent: clean, _meta: provenance };
 }
 function failure(error: unknown): CallToolResult {

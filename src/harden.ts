@@ -10,7 +10,7 @@ import { inventory, readEntry, MAX_TEXT_BYTES } from './target.js';
 import { parseJavaScript, sourceMapComments } from './rules.js';
 import { applySchema, planSchema, scanSchema, verifySchema, commandSchema, fail, type Action, type Plan, type Check, type ValidationCommand } from './model.js';
 import { canonical, ensureOutside, exists, hash, now, resolvedFuture, safeRelative } from './util.js';
-import { planMarkdown, writeReport } from './report.js';
+import { applyMarkdown, planMarkdown, writeReport } from './report.js';
 
 export type ApprovalRequest = { id: string; digest: string; message: string };
 /** Internal adapter boundary. Only the terminal / MCP transport supplies this callback; never expose it as tool input. */
@@ -172,11 +172,12 @@ export async function applyPlan(store: Store, planId: string, approve: HumanAppr
     const applied = { schemaVersion: 1 as const, kind: 'apply' as const, createdAt: now(), planId, scanId: plan.scanId, afterScanId: after.id,
       outputPath: outputPayload, outputSha256: after.record.target.sha256, approval, checks, validationStatus, requiresRepackaging: plan.target.format === 'asar' };
     const id = await store.save(applySchema, applied);
+    const reports = await writeReport(store, id, applyMarkdown(applied, plan, after.record), '加固与复测报告');
     await writeFile(path.join(plan.outputPath, 'DEFENCEREA.json'), JSON.stringify({ applyId: id, outputSha256: applied.outputSha256, requiresRepackaging: applied.requiresRepackaging, validationStatus, checks }, null, 2), { flag: 'wx' });
     if (validationStatus === 'failed') await writeFile(path.join(plan.outputPath, 'VALIDATION_FAILED'), '验证失败，不应发布此产物。检查 DEFENCEREA.json 和详细报告。', { flag: 'wx' });
     await rm(path.join(plan.outputPath, 'INCOMPLETE'));
     published = true;
-    return { id, record: applied, reports: after.reports };
+    return { id, record: applied, reports };
   } finally {
     // Only delete the staging directory that this invocation created inside its exclusively reserved output.
     await rm(staging, { recursive: true, force: true });

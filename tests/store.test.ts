@@ -1,4 +1,4 @@
-import { mkdtemp, readFile, writeFile, rm } from 'node:fs/promises';
+import { mkdtemp, readFile, writeFile, rm, realpath } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, expect, test } from 'vitest';
@@ -8,7 +8,7 @@ import { safeRelative, ensureOutside } from '../src/util.js';
 
 const temps: string[] = [];
 afterEach(async () => { await Promise.all(temps.splice(0).map(p => rm(p, { recursive: true, force: true }))); });
-async function temp() { const p = await mkdtemp(path.join(os.tmpdir(), 'defencerea-')); temps.push(p); return p; }
+async function temp() { const p = await realpath(await mkdtemp(path.join(os.tmpdir(), 'defencerea-'))); temps.push(p); return p; }
 
 test('content-addressed records reject tampering', async () => {
   const store = new Store(await temp());

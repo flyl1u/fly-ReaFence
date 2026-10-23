@@ -1,6 +1,6 @@
 import { writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import type { Finding, Scan, Plan, Comparison } from './model.js';
+import type { Applied, Finding, Scan, Plan, Comparison } from './model.js';
 import type { Store } from './store.js';
 import { maskText } from './util.js';
 
@@ -26,6 +26,9 @@ export function planMarkdown(plan: Plan, id: string): string {
 export function compareMarkdown(report: Comparison): string {
   const section = (title: string, findings: Finding[]) => `## ${title}（${findings.length}）\n\n${findings.map(item).join('\n') || '无。'}\n`;
   return `# DefenceREA 前后对比\n\n覆盖：${report.coverage}\n\n${section('本次未再观察到', report.resolved)}\n${section('仍观察到／待确认', report.remaining)}\n${section('新增观察', report.added)}\n## 限制\n\n${report.limitations.map(l => `- ${md(l)}`).join('\n')}\n`;
+}
+export function applyMarkdown(applied: Applied, plan: Plan, scan: Scan): string {
+  return `# DefenceREA 加固与复测报告\n\n输出：${md(applied.outputPath)}\n\n输出摘要：${applied.outputSha256}\n\n功能验证：${applied.validationStatus}\n\n需要重新打包／更新外部哈希与签名：${applied.requiresRepackaging ? '是' : '需按原项目发布流程判断'}\n\n## 实际操作\n\n${plan.actions.map(a => `- ${a.type}：${md(a.path)}`).join('\n')}\n\n## 验证结果\n\n${applied.checks.map(c => `- ${md(c.name)}：${c.status}；${md(c.details)}`).join('\n')}\n\n## 复测发现\n\n${scan.findings.map(item).join('\n') || '本次规则未再发现已配置的暴露项；不代表无法逆向。'}\n\n## 覆盖与限制\n\n全局：${scan.coverage}；本地规则：${scan.ruleCoverage}；REA：${scan.rea.status}。\n\n${[...plan.warnings, ...scan.limitations, ...scan.rea.limitations].map(w => `- ${md(w)}`).join('\n')}\n\n${applied.validationStatus === 'passed' ? '只说明所配置的检查通过，不是完整行为等价或防逆向证明。' : '运行时验证未完成或失败，不能认定产物功能兼容。'}\n`;
 }
 function htmlDocument(title: string, markdown: string): string {
   const plain = (text: string) => text.replace(/\\([\\`*_{}\[\]()<>#!|])/g, '$1');

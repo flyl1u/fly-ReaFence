@@ -17,7 +17,7 @@ export async function scanTarget(store: Store, input: string, options: { rea?: b
   options.signal?.throwIfAborted();
   if ((await inventory(input)).sha256 !== target.sha256) fail('TARGET_CHANGED', '体检期间输入已变化，请重新运行。');
   const record: Scan = { schemaVersion: 1, kind: 'scan', createdAt: now(), toolVersion: VERSION, target, findings: rules.findings,
-    coverage: rules.limitations.length || rea.coverage !== 'complete' ? 'partial' : 'complete', limitations: rules.limitations, rea };
+    coverage: rules.limitations.length || rea.coverage !== 'complete' ? 'partial' : 'complete', ruleCoverage: rules.limitations.length ? 'partial' : 'complete', limitations: rules.limitations, rea };
   const id = await store.save(scanSchema, record);
   const reports = await writeReport(store, id, scanMarkdown(record), '体检报告');
   return { id, record, reports };

@@ -16,7 +16,7 @@ export async function getReport(store: Store, id: string, offset = 0, limit = 25
   const kind = id.split('_')[0];
   if (kind === 'scan') {
     const record = await store.read(id, scanSchema);
-    return { id, kind, target: record.target.inputPath, sha256: record.target.sha256, coverage: record.coverage, rea: record.rea, limitations: record.limitations, ...page(record.findings), reportsDirectory: store.directory(id) };
+    return { id, kind, target: record.target.inputPath, sha256: record.target.sha256, coverage: record.coverage, ruleCoverage: record.ruleCoverage, rea: record.rea, limitations: record.limitations, ...page(record.findings), reportsDirectory: store.directory(id) };
   }
   if (kind === 'plan') {
     const record = await store.read(id, planSchema);

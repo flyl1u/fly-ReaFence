@@ -52,6 +52,9 @@ test('approved cleanup and obfuscation preserve exports and behavior in a separa
   expect((await inventory(f.input)).sha256).toBe(f.scan.record.target.sha256);
   expect(result.record.checks.some(c => c.status === 'not-run')).toBe(true);
   expect(await exists(path.join(plan.record.outputPath, 'INCOMPLETE'))).toBe(false);
+  const comparison = await compareScans(f.store, f.scan.id, result.record.afterScanId!);
+  expect(comparison.record.resolved.some(f => f.rule === 'SOURCE_MAP')).toBe(true);
+  expect(comparison.record.coverage).toBe('partial');
   await expect(applyPlan(f.store, plan.id, confirm, { rea: false })).rejects.toThrow('输出');
 });
 

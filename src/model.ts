@@ -37,7 +37,7 @@ export type ReaAnalysis = z.infer<typeof reaSchema>;
 export const scanSchema = z.object({
   schemaVersion: z.literal(1), kind: z.literal('scan'), createdAt: z.string(),
   toolVersion: z.string(), target: targetSchema, findings: z.array(findingSchema),
-  coverage: coverageSchema, limitations: z.array(z.string()), rea: reaSchema,
+  coverage: coverageSchema, ruleCoverage: coverageSchema, limitations: z.array(z.string()), rea: reaSchema,
 }).strict();
 export type Scan = z.infer<typeof scanSchema>;
 

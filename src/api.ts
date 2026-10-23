@@ -35,6 +35,6 @@ export function compact(result: { id: string; record: unknown; reports?: unknown
   const record = result.record as Record<string, unknown>;
   return { id: result.id, kind: record.kind, coverage: record.coverage, findings: Array.isArray(record.findings) ? record.findings.length : undefined,
     actions: Array.isArray(record.actions) ? record.actions.length : undefined, outputPath: record.outputPath, afterScanId: record.afterScanId,
-    checks: record.checks, requiresRepackaging: record.requiresRepackaging, reports: result.reports };
+    checks: record.checks, validationStatus: record.validationStatus, requiresRepackaging: record.requiresRepackaging, reports: result.reports };
 }
 export const commandsFileSchema = z.array(z.object({ executable: z.string().min(1), args: z.array(z.string()), timeoutMs: z.number().int().min(100).max(600_000) }).strict());

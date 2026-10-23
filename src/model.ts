@@ -67,6 +67,7 @@ export const applySchema = z.object({
   planId: idSchema, scanId: idSchema, afterScanId: idSchema.optional(),
   outputPath: z.string(), outputSha256: shaSchema,
   approval: z.enum(['terminal', 'mcp-elicitation']), checks: z.array(checkSchema),
+  validationStatus: z.enum(['passed', 'failed', 'not-run']),
   requiresRepackaging: z.boolean(),
 }).strict();
 export type Applied = z.infer<typeof applySchema>;

@@ -29,8 +29,8 @@ export async function main(argv = process.argv) {
       const commands = options.commands ? commandsFileSchema.parse(JSON.parse(await readFile(options.commands, 'utf8'))) : [];
       output(compact(await preparePlan(store(), scanId, { output: options.out, remove: options.remove, obfuscate: options.obfuscate, environment: options.environment as 'node' | 'browser-no-eval', commands })));
     });
-  program.command('apply <planId>').description('在交互式终端预览、确认后执行加固').option('--no-rea', '复测跳过 REA，覆盖标记为未知').action(async (id: string, options: { rea: boolean }) => { output(compact(await applyPlan(store(), id, terminalApprover, options))); });
-  program.command('verify <applyId>').description('重新运行验证；需要用户再次确认运行时命令').action(async (id: string) => { const result = await verifyApplied(store(), id, terminalApprover); output({ id: result.id, ...result.record }); });
+  program.command('apply <planId>').description('在交互式终端预览、确认后执行加固').option('--no-rea', '复测跳过 REA，覆盖标记为未知').action(async (id: string, options: { rea: boolean }) => { const applied = await applyPlan(store(), id, terminalApprover, options); output(compact(applied)); if (applied.record.validationStatus === 'failed') process.exitCode = 2; });
+  program.command('verify <applyId>').description('重新运行验证；需要用户再次确认运行时命令').action(async (id: string) => { const result = await verifyApplied(store(), id, terminalApprover); output({ id: result.id, ...result.record }); if (result.record.checks.some(c => c.status === 'failed')) process.exitCode = 2; });
   program.command('compare <beforeId> <afterId>').description('生成体检前后对比报告').action(async (before: string, after: string) => { output(compact(await compareScans(store(), before, after))); });
   program.command('mcp').description('启动本地 stdio MCP 服务').action(() => {
     const server = startMcp(store());

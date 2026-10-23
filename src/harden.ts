@@ -168,10 +168,12 @@ export async function applyPlan(store: Store, planId: string, approve: HumanAppr
     await unchanged(plan);
     options.signal?.throwIfAborted();
     const after = await scanTarget(store, outputPayload, { rea: options.rea, signal: options.signal });
+    const validationStatus = checks.some(c => c.status === 'failed') ? 'failed' as const : checks.some(c => c.status === 'not-run' || c.status === 'unknown') ? 'not-run' as const : 'passed' as const;
     const applied = { schemaVersion: 1 as const, kind: 'apply' as const, createdAt: now(), planId, scanId: plan.scanId, afterScanId: after.id,
-      outputPath: outputPayload, outputSha256: after.record.target.sha256, approval, checks, requiresRepackaging: plan.target.format === 'asar' };
+      outputPath: outputPayload, outputSha256: after.record.target.sha256, approval, checks, validationStatus, requiresRepackaging: plan.target.format === 'asar' };
     const id = await store.save(applySchema, applied);
-    await writeFile(path.join(plan.outputPath, 'DEFENCEREA.json'), JSON.stringify({ applyId: id, outputSha256: applied.outputSha256, requiresRepackaging: applied.requiresRepackaging, checks }, null, 2), { flag: 'wx' });
+    await writeFile(path.join(plan.outputPath, 'DEFENCEREA.json'), JSON.stringify({ applyId: id, outputSha256: applied.outputSha256, requiresRepackaging: applied.requiresRepackaging, validationStatus, checks }, null, 2), { flag: 'wx' });
+    if (validationStatus === 'failed') await writeFile(path.join(plan.outputPath, 'VALIDATION_FAILED'), '验证失败，不应发布此产物。检查 DEFENCEREA.json 和详细报告。', { flag: 'wx' });
     await rm(path.join(plan.outputPath, 'INCOMPLETE'));
     published = true;
     return { id, record: applied, reports: after.reports };

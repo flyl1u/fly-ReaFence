@@ -61,6 +61,8 @@ test('failed validation is retained and marked rather than silently succeeding',
   const plan = await preparePlan(store, scan.id, { output: path.join(f.root, 'output'), commands: [{ executable: process.execPath, args: ['-e', 'process.exit(2)'], timeoutMs: 2000 }] });
   const applied = await applyPlan(store, plan.id, async () => 'terminal', { rea: false });
   expect(applied.record.checks.some(c => c.status === 'failed')).toBe(true);
+  expect(applied.record.validationStatus).toBe('failed');
+  expect(await readFile(path.join(plan.record.outputPath, 'VALIDATION_FAILED'), 'utf8')).toContain('验证失败');
 });
 
 test('validation timeouts terminate owned processes and remain failures', async () => {

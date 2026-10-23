@@ -1,7 +1,15 @@
 {
   "name": "reafence",
   "version": "0.1.0",
-  "description": "Local evidence-based reverse engineering exposure checks and human-approved hardening for JS and Electron",
+  "description": "Local-first reverse-engineering audits and human-approved hardening for JavaScript and Electron apps. Powered by REA.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flyl1u/ReaFence.git"
+  },
+  "homepage": "https://github.com/flyl1u/ReaFence#readme",
+  "bugs": {
+    "url": "https://github.com/flyl1u/ReaFence/issues"
+  },
   "type": "module",
   "license": "MIT",
   "engines": {

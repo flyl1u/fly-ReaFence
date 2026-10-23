@@ -11,6 +11,8 @@ The default record directory is now `~/.reafence`. Existing evidence is not rewr
 Requires Node.js 24 LTS (24.11+) or 26+. No model account, telemetry, target upload, or native decompiler is required. The connected agent's model provider has its own data policy.
 
 ```sh
+git clone https://github.com/flyl1u/ReaFence.git
+cd ReaFence
 npm ci --ignore-scripts
 npm run build
 node bin/reafence.mjs doctor

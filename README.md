@@ -17,7 +17,8 @@
 需要 Node.js 24 LTS（>=24.11）和 Git。源码安装：
 
 ```powershell
-cd D:\REAdefense
+git clone https://github.com/flyl1u/ReaFence.git
+cd ReaFence
 npm ci --ignore-scripts
 npm run build
 node bin/reafence.mjs doctor
@@ -26,7 +27,7 @@ node bin/reafence.mjs scan examples/electron-app
 
 扫描返回 `scan_...`、HTML 和 Markdown 报告路径。默认工作目录为用户主目录下的 `.reafence`；可使用全局参数 `--store D:\reports\reafence`，但不能与输入、加固输出重叠。
 
-更名前的体检与证据不会自动改写。要查看已有记录，请用 `--store` 指定原来的记录目录；新的默认目录为 `.reafence`。源码项目仍位于 `D:\REAdefense`。
+更名前的体检与证据不会自动改写。要查看已有记录，请用 `--store` 指定原来的记录目录；新的默认目录为 `.reafence`，源码目录名称可自行选择。
 
 ```powershell
 # 分页查看问题；将占位 ID 替换为实际返回值

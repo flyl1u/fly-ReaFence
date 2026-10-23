@@ -15,6 +15,7 @@
     "test": "vitest run",
     "check": "npm run typecheck && npm test && npm run build",
     "test:rea": "node scripts/verify-rea.mjs",
+    "test:mcp": "node scripts/verify-mcp.mjs",
     "prepack": "npm run build"
   },
   "dependencies": {

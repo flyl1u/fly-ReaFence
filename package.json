@@ -1,5 +1,5 @@
 {
-  "name": "defencerea",
+  "name": "reafence",
   "version": "0.1.0",
   "description": "Local evidence-based reverse engineering exposure checks and human-approved hardening for JS and Electron",
   "type": "module",
@@ -8,7 +8,7 @@
     "node": "^24.11.0 || >=26.0.0"
   },
   "bin": {
-    "defencerea": "bin/defencerea.mjs"
+    "reafence": "bin/reafence.mjs"
   },
   "exports": {
     ".": "./dist/index.js"

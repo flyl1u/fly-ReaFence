@@ -15,11 +15,11 @@ const require = createRequire(import.meta.url);
 let electron;
 try { electron = require('electron'); }
 catch { throw new Error('Electron 测试需要开发依赖的运行时。请先运行 node node_modules/electron/install.js。'); }
-const root = await mkdtemp(path.join(os.tmpdir(), 'defencerea-electron-'));
+const root = await mkdtemp(path.join(os.tmpdir(), 'reafence-electron-'));
 const example = fileURLToPath(new URL('../examples/electron-app', import.meta.url));
 async function run(payload, label) {
   await new Promise((resolve, reject) => {
-    const env = { ...process.env, DEFENCEREA_ELECTRON_DATA: path.join(root, `profile-${label}`) };
+    const env = { ...process.env, REAFENCE_ELECTRON_DATA: path.join(root, `profile-${label}`) };
     delete env.ELECTRON_RUN_AS_NODE;
     const child = spawn(electron, [payload], { windowsHide: true, env, stdio: ['ignore', 'pipe', 'pipe'] });
     let output = ''; let error = '';
@@ -27,7 +27,7 @@ async function run(payload, label) {
     child.stderr.on('data', chunk => { error = (error + chunk.toString()).slice(-2000); });
     const timer = setTimeout(() => { child.kill(); reject(new Error('Electron test timed out')); }, 30_000);
     child.on('error', e => { clearTimeout(timer); reject(e); });
-    child.on('close', code => { clearTimeout(timer); if (code === 0 && output.includes('DEFENCEREA_ELECTRON_OK:22')) resolve(); else reject(new Error(`Electron failed (${code}): ${error}`)); });
+    child.on('close', code => { clearTimeout(timer); if (code === 0 && output.includes('REAFENCE_ELECTRON_OK:22')) resolve(); else reject(new Error(`Electron failed (${code}): ${error}`)); });
   });
 }
 try {

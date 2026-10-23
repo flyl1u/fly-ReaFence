@@ -8,7 +8,7 @@ const require = createRequire(import.meta.url);
 export async function doctor() {
   let rea: { available: boolean; version?: string; expected: string } = { available: false, expected: REA_VERSION };
   try { const pkg = JSON.parse(await readFile(require.resolve('rea-agents/package.json'), 'utf8')); rea = { available: pkg.version === REA_VERSION, version: pkg.version, expected: REA_VERSION }; } catch { /* reported as unavailable */ }
-  return { version: VERSION, node: process.versions.node, platform: process.platform, rea, capabilities: ['static-js-directory', 'asar', 'local-reports', 'source-map-cleanup', 'selective-obfuscation', 'human-approval'], limits: { entries: 20_000, totalBytes: 512 * 1024 * 1024, textBytesPerFile: 4 * 1024 * 1024 }, notes: ['体检不执行目标代码。', 'REA 不可用时规则仍可运行，但跨层覆盖未知。', 'MCP 用户确认能力取决于宿主；不支持时须使用交互式 CLI。'] };
+  return { name: 'reafence', version: VERSION, node: process.versions.node, platform: process.platform, rea, capabilities: ['static-js-directory', 'asar', 'local-reports', 'source-map-cleanup', 'selective-obfuscation', 'human-approval'], limits: { entries: 20_000, totalBytes: 512 * 1024 * 1024, textBytesPerFile: 4 * 1024 * 1024 }, notes: ['体检不执行目标代码。', 'REA 不可用时规则仍可运行，但跨层覆盖未知。', 'MCP 用户确认能力取决于宿主；不支持时须使用交互式 CLI。'] };
 }
 export async function getReport(store: Store, id: string, offset = 0, limit = 25) {
   if (!Number.isInteger(offset) || offset < 0 || !Number.isInteger(limit) || limit < 1 || limit > 100) fail('INVALID_PAGE', '分页要求 offset>=0 且 1<=limit<=100。');

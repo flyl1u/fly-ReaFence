@@ -15,7 +15,7 @@ export async function analyzeRea(target: Target, storeRoot: string, signal?: Abo
   try {
     const transport = new StdioClientTransport({ command: process.execPath, args: [reaEntry(), 'mcp'], stderr: 'pipe', maxBufferSize: 12 * 1024 * 1024 });
     transport.stderr?.on('data', () => {});
-    client = new Client({ name: 'defencerea', version: VERSION });
+    client = new Client({ name: 'reafence', version: VERSION });
     await client.connect(transport, { timeout: 30_000 });
     const call = await client.callTool({ name: 'analyze_javascript_application', arguments: { input_path: target.inputPath, format: target.format, integrity_policy: 'fail', detail: 'summary' } }, { timeout: 180_000, signal });
     if (call.isError || !call.structuredContent) return { ...base, status: 'failed', limitations: ['REA 分析失败；没有把失败作为加固有效的证据。'] };

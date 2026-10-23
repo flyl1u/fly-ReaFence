@@ -49,5 +49,5 @@ test('ASAR inventories bind packed and unpacked bytes without executing native m
 
 test('rejects report storage within a target', async () => {
   const f = await fixture({ 'main.js': '' }); cleanups.push(f.cleanup);
-  await expect(scanTarget(new Store(path.join(f.input, '.defencerea')), f.input, { rea: false })).rejects.toThrow('分离');
+  await expect(scanTarget(new Store(path.join(f.input, '.reafence')), f.input, { rea: false })).rejects.toThrow('分离');
 });

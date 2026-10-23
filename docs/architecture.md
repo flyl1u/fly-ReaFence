@@ -34,7 +34,7 @@ Scan 分别存储 `ruleCoverage`、REA 覆盖和保守合并的全局 `coverage`
 
 Plan 固定输入、输出、动作、混淆环境、种子和验证命令。Apply 记录原/后体检、输出摘要、确认渠道、每项检查、`validationStatus` 和是否需重新打包。`not-run` 不会被显示成功能通过。
 
-本地 Store 默认为用户主目录下 `.defencerea`。每条记录目录包含 `record.json`，体检/方案/对比还包含离线 HTML 和 Markdown。完整证据单独放在 `evidence-*` 目录并记录摘要。
+本地 Store 默认为用户主目录下 `.reafence`。每条记录目录包含 `record.json`，体检/方案/对比还包含离线 HTML 和 Markdown。完整证据单独放在 `evidence-*` 目录并记录摘要。
 
 ## 确认与失败
 

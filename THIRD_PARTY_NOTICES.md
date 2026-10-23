@@ -1,6 +1,6 @@
 # Third-party notices
 
-DefenceREA's original code is MIT licensed. Dependencies are installed as separate npm packages; they are not bundled into the published JavaScript. Keep their original license and notice files when redistributing an installation.
+ReaFence's original code is MIT licensed. Dependencies are installed as separate npm packages; they are not bundled into the published JavaScript. Keep their original license and notice files when redistributing an installation.
 
 | Component | Pinned version | License | Source |
 | --- | --- | --- | --- |
@@ -15,6 +15,6 @@ DefenceREA's original code is MIT licensed. Dependencies are installed as separa
 
 The lockfile identifies transitive dependencies. Each installed package retains its own notices. REA contains additional third-party notices and license texts under its own `THIRD_PARTY_NOTICES.md` and `licenses/`; its MIT license does not relicense those materials or grant access to commercial reverse engineering tools. This project does not require those commercial tools for the static JavaScript lane.
 
-Development tools include TypeScript, Vitest, Node.js type declarations and Electron 45.0.0. Electron ships Chromium and other third-party software with their original notices. Electron is used only for tests and is not a runtime dependency of DefenceREA.
+Development tools include TypeScript, Vitest, Node.js type declarations and Electron 45.0.0. Electron ships Chromium and other third-party software with their original notices. Electron is used only for tests and is not a runtime dependency of ReaFence.
 
-All files under `examples/electron-app` were authored for DefenceREA and are provided under this repository's MIT license. No third-party application is used as a shipped test target. No affiliation with REA or dependency authors is implied.
+All files under `examples/electron-app` were authored for ReaFence and are provided under this repository's MIT license. No third-party application is used as a shipped test target. No affiliation with REA or dependency authors is implied.

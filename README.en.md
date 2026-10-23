@@ -1,4 +1,4 @@
-# DefenceREA
+# ReaFence
 
 [中文](README.md) · [Architecture](docs/architecture.md) · [Evaluation](docs/benchmark.md)
 
@@ -6,17 +6,19 @@ Local exposure checks and human-approved hardening for shipped JavaScript and El
 
 **Inspect → explain evidence → prepare a concrete plan → ask the human → write a separate copy → verify.**
 
+The default record directory is now `~/.reafence`. Existing evidence is not rewritten; use `--store` to access a previous record directory. The source checkout's directory name does not need to match the package name.
+
 Requires Node.js 24 LTS (24.11+) or 26+. No model account, telemetry, target upload, or native decompiler is required. The connected agent's model provider has its own data policy.
 
 ```sh
 npm ci --ignore-scripts
 npm run build
-node bin/defencerea.mjs doctor
-node bin/defencerea.mjs scan examples/electron-app
-node bin/defencerea.mjs report <scan-id>
-node bin/defencerea.mjs plan <scan-id> --out /absolute/new/output --obfuscate calc.cjs
-node bin/defencerea.mjs apply <plan-id>
-node bin/defencerea.mjs compare <before-scan-id> <after-scan-id>
+node bin/reafence.mjs doctor
+node bin/reafence.mjs scan examples/electron-app
+node bin/reafence.mjs report <scan-id>
+node bin/reafence.mjs plan <scan-id> --out /absolute/new/output --obfuscate calc.cjs
+node bin/reafence.mjs apply <plan-id>
+node bin/reafence.mjs compare <before-scan-id> <after-scan-id>
 ```
 
 The package is not published to npm yet. Run the source checkout or build a local package with `npm pack`.
@@ -31,7 +33,7 @@ Reports and outputs must be outside the input. Outputs must not exist. Directory
 
 Optional JSON command arrays can be passed with `plan --commands <file>`. They are displayed to the human, run without a shell and with a timeout, and reruns require fresh approval. Commands are not sandboxed. Missing runtime tests are reported as `not-run`; failed checks produce exit code 2 and a `VALIDATION_FAILED` marker.
 
-Register the stdio service in your host using `command: "node"` and `args: ["/absolute/checkout/bin/defencerea.mjs", "mcp"]`. Seven tools provide environment checks, scanning, paged reports, plans, approved application, verification and comparison. Both legacy and modern MCP confirmation protocols are covered by integration tests.
+Register the stdio service in your host using `command: "node"` and `args: ["/absolute/checkout/bin/reafence.mjs", "mcp"]`. Seven tools provide environment checks, scanning, paged reports, plans, approved application, verification and comparison. Both legacy and modern MCP confirmation protocols are covered by integration tests.
 
 ```sh
 npm run check

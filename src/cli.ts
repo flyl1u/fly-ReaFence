@@ -7,11 +7,11 @@ import { compareScans } from './compare.js';
 import { doctor, getReport, compact, commandsFileSchema } from './api.js';
 import { terminalApprover } from './approval.js';
 import { startMcp } from './mcp.js';
-import { VERSION, DefenceError } from './model.js';
+import { VERSION, ReaFenceError } from './model.js';
 import { maskText, sanitizeData } from './util.js';
 
 export async function main(argv = process.argv) {
-  const program = new Command().name('defencerea').description('JS / Electron 静态逆向体检与用户确认后加固').version(VERSION)
+  const program = new Command().name('reafence').description('JS / Electron 静态逆向体检与用户确认后加固').version(VERSION)
     .option('--store <directory>', '报告和记录目录（必须与输入、输出分离）').option('--json', '输出结构化 JSON');
   const store = () => new Store(program.opts().store);
   const output = (data: unknown) => { process.stdout.write(`${JSON.stringify(sanitizeData(data), null, 2)}\n`); };
@@ -25,7 +25,7 @@ export async function main(argv = process.argv) {
     .option('--environment <target>', '混淆环境 node 或 browser-no-eval', 'node')
     .option('--commands <json-file>', '待用户确认的验证命令数组文件')
     .action(async (scanId: string, options: { out: string; remove: string[]; obfuscate: string[]; environment: string; commands?: string }) => {
-      if (!['node', 'browser-no-eval'].includes(options.environment)) throw new DefenceError('INVALID_ENVIRONMENT', 'environment 必须为 node 或 browser-no-eval。');
+      if (!['node', 'browser-no-eval'].includes(options.environment)) throw new ReaFenceError('INVALID_ENVIRONMENT', 'environment 必须为 node 或 browser-no-eval。');
       const commands = options.commands ? commandsFileSchema.parse(JSON.parse(await readFile(options.commands, 'utf8'))) : [];
       output(compact(await preparePlan(store(), scanId, { output: options.out, remove: options.remove, obfuscate: options.obfuscate, environment: options.environment as 'node' | 'browser-no-eval', commands })));
     });
@@ -39,7 +39,7 @@ export async function main(argv = process.argv) {
   });
   try { await program.parseAsync(argv); }
   catch (error) {
-    process.stderr.write(`${maskText(JSON.stringify({ code: error instanceof DefenceError ? error.code : 'OPERATION_FAILED', message: error instanceof Error ? error.message : String(error) }))}\n`);
+    process.stderr.write(`${maskText(JSON.stringify({ code: error instanceof ReaFenceError ? error.code : 'OPERATION_FAILED', message: error instanceof Error ? error.message : String(error) }))}\n`);
     process.exitCode = 1;
   }
 }

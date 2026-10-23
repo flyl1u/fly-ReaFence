@@ -7,7 +7,7 @@ import { fail, idSchema } from './model.js';
 
 export class Store {
   readonly root: string;
-  constructor(root = path.join(homedir(), '.defencerea')) { this.root = path.resolve(root); }
+  constructor(root = path.join(homedir(), '.reafence')) { this.root = path.resolve(root); }
   directory(id: string): string { return path.join(this.root, idSchema.parse(id)); }
   async save<T extends { kind: string }>(schema: z.ZodType<T>, value: T): Promise<string> {
     const parsed = schema.parse(value);

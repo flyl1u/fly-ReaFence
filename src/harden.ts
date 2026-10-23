@@ -173,8 +173,8 @@ export async function applyPlan(store: Store, planId: string, approve: HumanAppr
       outputPath: outputPayload, outputSha256: after.record.target.sha256, approval, checks, validationStatus, requiresRepackaging: plan.target.format === 'asar' };
     const id = await store.save(applySchema, applied);
     const reports = await writeReport(store, id, applyMarkdown(applied, plan, after.record), '加固与复测报告');
-    await writeFile(path.join(plan.outputPath, 'DEFENCEREA.json'), JSON.stringify({ applyId: id, outputSha256: applied.outputSha256, requiresRepackaging: applied.requiresRepackaging, validationStatus, checks }, null, 2), { flag: 'wx' });
-    if (validationStatus === 'failed') await writeFile(path.join(plan.outputPath, 'VALIDATION_FAILED'), '验证失败，不应发布此产物。检查 DEFENCEREA.json 和详细报告。', { flag: 'wx' });
+    await writeFile(path.join(plan.outputPath, 'REAFENCE.json'), JSON.stringify({ applyId: id, outputSha256: applied.outputSha256, requiresRepackaging: applied.requiresRepackaging, validationStatus, checks }, null, 2), { flag: 'wx' });
+    if (validationStatus === 'failed') await writeFile(path.join(plan.outputPath, 'VALIDATION_FAILED'), '验证失败，不应发布此产物。检查 REAFENCE.json 和详细报告。', { flag: 'wx' });
     await rm(path.join(plan.outputPath, 'INCOMPLETE'));
     published = true;
     return { id, record: applied, reports };

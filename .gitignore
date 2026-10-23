@@ -1,6 +1,8 @@
 node_modules/
 dist/
 coverage/
+.reafence/
+# Historical local evidence stays private after the rebrand.
 .defencerea/
 *.tgz
 *.log

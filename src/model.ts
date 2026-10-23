@@ -83,7 +83,7 @@ export const compareSchema = z.object({
 }).strict();
 export type Comparison = z.infer<typeof compareSchema>;
 
-export class DefenceError extends Error {
-  constructor(public readonly code: string, message: string) { super(message); this.name = 'DefenceError'; }
+export class ReaFenceError extends Error {
+  constructor(public readonly code: string, message: string) { super(message); this.name = 'ReaFenceError'; }
 }
-export function fail(code: string, message: string): never { throw new DefenceError(code, message); }
+export function fail(code: string, message: string): never { throw new ReaFenceError(code, message); }

@@ -6,8 +6,8 @@ import { fileURLToPath } from 'node:url';
 import { Client } from '@modelcontextprotocol/client';
 import { StdioClientTransport } from '@modelcontextprotocol/client/stdio';
 
-const root = await mkdtemp(path.join(os.tmpdir(), 'defencerea-mcp-'));
-const cli = fileURLToPath(new URL('../bin/defencerea.mjs', import.meta.url));
+const root = await mkdtemp(path.join(os.tmpdir(), 'reafence-mcp-'));
+const cli = fileURLToPath(new URL('../bin/reafence.mjs', import.meta.url));
 try {
   const input = path.join(root, 'owned-fixture');
   await mkdir(input);
@@ -16,7 +16,7 @@ try {
   for (const mode of ['legacy', 'auto']) {
     const transport = new StdioClientTransport({ command: process.execPath, args: [cli, '--store', path.join(root, `store-${mode}`), 'mcp'], stderr: 'pipe' });
     transport.stderr?.on('data', () => {});
-    const client = new Client({ name: 'defencerea-integration-tests', version: '0.1.0' }, { capabilities: { elicitation: { form: {} } }, versionNegotiation: { mode } });
+    const client = new Client({ name: 'reafence-integration-tests', version: '0.1.0' }, { capabilities: { elicitation: { form: {} } }, versionNegotiation: { mode } });
     let confirmations = 0;
     // This is a protocol test against a fixture authored here, not approval for a user's application.
     client.setRequestHandler('elicitation/create', async () => { confirmations++; return { action: 'accept', content: { confirm: true } }; });

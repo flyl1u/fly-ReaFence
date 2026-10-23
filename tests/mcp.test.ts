@@ -14,7 +14,7 @@ async function session(confirmation?: boolean) {
   const f = await fixture({ 'main.js': 'module.exports = 42;\n//# sourceMappingURL=main.js.map', 'main.js.map': '{"version":3,"sources":["main.ts"],"mappings":""}' });
   cleanups.push(f.cleanup);
   const server = createMcpServer(new Store(f.store));
-  const client = new Client({ name: 'defencerea-tests', version: '0.1.0' }, { capabilities: confirmation === undefined ? {} : { elicitation: { form: {} } } });
+  const client = new Client({ name: 'reafence-tests', version: '0.1.0' }, { capabilities: confirmation === undefined ? {} : { elicitation: { form: {} } } });
   if (confirmation !== undefined) client.setRequestHandler('elicitation/create', async () => ({ action: 'accept', content: { confirm: confirmation } }));
   const [left, right] = InMemoryTransport.createLinkedPair();
   await server.connect(right); await client.connect(left);

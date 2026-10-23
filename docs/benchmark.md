@@ -23,7 +23,7 @@
   "taskSha256": "<64 位任务文本摘要>",
   "model": "<固定模型版本>",
   "modelSettings": "<固定参数>",
-  "toolsVersion": "REA 6.7.0 / DefenceREA 0.1.0",
+  "toolsVersion": "REA 6.7.0 / ReaFence 0.1.0",
   "timeBudgetMs": 600000,
   "tokenBudget": 20000,
   "runs": [

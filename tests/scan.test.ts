@@ -25,6 +25,7 @@ test('static scan finds exposure, redacts credentials and never executes JS', as
   expect((await inventory(f.input)).sha256).toBe(before.sha256);
   expect(JSON.stringify(scan.record)).not.toContain(fake);
   expect(await readFile(scan.reports.html, 'utf8')).not.toContain(fake);
+  expect(await readFile(scan.reports.html, 'utf8')).toContain('<h2>代码包含源码映射引用</h2>');
 });
 
 test('malformed JavaScript remains unknown', async () => {

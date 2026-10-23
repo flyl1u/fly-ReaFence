@@ -34,6 +34,7 @@ function htmlDocument(title: string, markdown: string): string {
   const plain = (text: string) => text.replace(/\\([\\`*_{}\[\]()<>#!|])/g, '$1');
   // Render only the tiny subset produced above. Target text is always escaped; no raw HTML or links are interpreted.
   const blocks = (text: string) => text.split(/\n\s*\n/).filter(s => s.trim()).map(block => {
+    block = block.trim();
     if (block.startsWith('### ')) return `<h2>${escape(plain(block.slice(4)))}</h2>`;
     if (block.startsWith('- ')) return `<ul>${block.split('\n').map(line => `<li>${escape(plain(line.replace(/^- /, '')))}</li>`).join('')}</ul>`;
     return `<p>${escape(plain(block))}</p>`;

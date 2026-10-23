@@ -37,6 +37,7 @@ Register the stdio service in your host using `command: "node"` and `args: ["/ab
 npm run check
 npm run test:rea
 npm run test:mcp
+npm run test:package
 node node_modules/electron/install.js
 npm run test:electron
 ```

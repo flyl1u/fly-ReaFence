@@ -112,6 +112,7 @@ CLI 返回结构化 JSON；`--json` 是兼容性的显式标记。退出码：`0
 npm run check
 npm run test:rea
 npm run test:mcp
+npm run test:package
 
 # Electron 仅用于开发验证；--ignore-scripts 安装后需单独下载测试运行时
 node node_modules/electron/install.js
@@ -121,7 +122,7 @@ npm run test:electron
 npm pack
 ```
 
-`check` 包含严格类型检查、回归测试和构建。真实 REA 测试保存完整本地证据；MCP 测试验证两代协议的确认；Electron 测试在隐藏窗口验证原版和加固后目录／ASAR 的 preload、contextBridge、IPC。测试中的模拟同意仅用于仓库自有样例，不开放给产品工具。
+`check` 包含严格类型检查、回归测试和构建。真实 REA 测试保存完整本地证据；MCP 测试验证两代协议的确认；Electron 测试在隐藏窗口验证原版和加固后目录／ASAR 的 preload、contextBridge、IPC。`test:package` 在临时目录安装打包产物，仅安装生产依赖，再通过已安装的 CLI 调用真实 REA。测试中的模拟同意仅用于仓库自有样例，不开放给产品工具。
 
 GitHub Actions 配置 Windows、Linux、macOS 的 Node.js 24 检查。项目开发约定见 [AGENTS.md](AGENTS.md)：每个独立更改在检查通过后提交，最终工作区保持干净。
 

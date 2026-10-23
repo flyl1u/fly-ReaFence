@@ -33,3 +33,4 @@ jobs:
       - if: runner.os != 'Linux'
         run: npm run test:electron
       - run: npm pack --dry-run
+      - run: npm run test:package

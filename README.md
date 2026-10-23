@@ -1,10 +1,8 @@
-# ReaFence · 逆向防线
+# ReaFence
 
 [English](README.en.md) · [接口与架构](docs/architecture.md) · [评测方法](docs/benchmark.md) · [边界与安全](SECURITY.md)
 
 **在 JS / Electron 发版前检查暴露了什么，经用户确认后生成加固副本，并保留复测证据。**
-
-在 Agent 拆解你的软件之前，先找到暴露点。
 
 ```text
 静态体检 → 问题和证据 → 逐项方案 → 用户确认 → 新副本 → 功能验证与前后对比

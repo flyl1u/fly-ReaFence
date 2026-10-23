@@ -17,7 +17,7 @@
 需要 Node.js 24 LTS（>=24.11）和 Git。源码安装：
 
 ```powershell
-git clone https://github.com/flyl1u/ReaFence.git
+git clone https://github.com/flyl1u/fly-ReaFence.git ReaFence
 cd ReaFence
 npm ci --ignore-scripts
 npm run build

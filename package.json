@@ -4,11 +4,11 @@
   "description": "Local-first reverse-engineering audits and human-approved hardening for JavaScript and Electron apps. Powered by REA.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/flyl1u/ReaFence.git"
+    "url": "git+https://github.com/flyl1u/fly-ReaFence.git"
   },
-  "homepage": "https://github.com/flyl1u/ReaFence#readme",
+  "homepage": "https://github.com/flyl1u/fly-ReaFence#readme",
   "bugs": {
-    "url": "https://github.com/flyl1u/ReaFence/issues"
+    "url": "https://github.com/flyl1u/fly-ReaFence/issues"
   },
   "type": "module",
   "license": "MIT",

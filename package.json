@@ -4,11 +4,26 @@
   "description": "Local evidence-based reverse engineering exposure checks and human-approved hardening for JS and Electron",
   "type": "module",
   "license": "MIT",
-  "engines": { "node": "^24.11.0 || >=26.0.0" },
-  "bin": { "defencerea": "bin/defencerea.mjs" },
-  "exports": { ".": "./dist/index.js" },
+  "engines": {
+    "node": "^24.11.0 || >=26.0.0"
+  },
+  "bin": {
+    "defencerea": "bin/defencerea.mjs"
+  },
+  "exports": {
+    ".": "./dist/index.js"
+  },
   "types": "./dist/index.d.ts",
-  "files": ["bin", "dist", "docs", "examples", "README.md", "README.en.md", "LICENSE", "THIRD_PARTY_NOTICES.md"],
+  "files": [
+    "bin",
+    "dist",
+    "docs",
+    "examples",
+    "README.md",
+    "README.en.md",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
@@ -16,6 +31,7 @@
     "check": "npm run typecheck && npm test && npm run build",
     "test:rea": "node scripts/verify-rea.mjs",
     "test:mcp": "node scripts/verify-mcp.mjs",
+    "test:electron": "node scripts/verify-electron.mjs",
     "prepack": "npm run build"
   },
   "dependencies": {
@@ -30,6 +46,7 @@
   },
   "devDependencies": {
     "@types/node": "24.10.0",
+    "electron": "45.0.0",
     "typescript": "5.9.3",
     "vitest": "5.0.5"
   }

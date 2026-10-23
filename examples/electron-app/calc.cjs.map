@@ -1,0 +1,1 @@
+{"version":3,"file":"calc.cjs","sources":["calc.ts"],"sourcesContent":["export const total = (price: number, count: number) => price * count + 7;"],"names":[],"mappings":""}

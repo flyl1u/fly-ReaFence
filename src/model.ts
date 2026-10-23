@@ -8,7 +8,7 @@ const coverageSchema = z.enum(['complete', 'partial', 'unknown']);
 
 export const fileSchema = z.object({
   path: z.string().min(1), size: z.number().int().nonnegative(), sha256: shaSchema,
-  kind: z.enum(['file', 'symlink']), executable: z.boolean(), unpacked: z.boolean(),
+  kind: z.enum(['file', 'directory', 'symlink']), executable: z.boolean(), unpacked: z.boolean(),
 }).strict();
 export const targetSchema = z.object({
   requestedPath: z.string(), inputPath: z.string(), format: z.enum(['directory', 'asar']),
